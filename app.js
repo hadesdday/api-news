@@ -6,7 +6,7 @@ const fs = require("fs");
 const parser = new xml2js.Parser({ attrkey: "ATTR" });
 var parseString = require("xml2js").parseString;
 
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
