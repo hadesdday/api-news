@@ -40,7 +40,7 @@ app.get("/api/get/:slug", (req, res) => {
         parseString(resp["body"], function (err, result) {
           var s = JSON.parse(JSON.stringify(result));
           var data = s.rss.channel;
-          res.send({ data });
+          res.send(data[0]);
         });
       }
     }
