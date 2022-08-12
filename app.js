@@ -5,6 +5,7 @@ const xml2js = require("xml2js");
 const fs = require("fs");
 const parser = new xml2js.Parser({ attrkey: "ATTR" });
 var parseString = require("xml2js").parseString;
+const cheerio = require("cheerio");
 
 const port = process.env.PORT || 3000;
 
@@ -18,20 +19,6 @@ app.use(function (req, res, next) {
   next();
 });
 
-app.get("/api/blog", (req, res) => {
-  request.get(
-    "https://vietnamnet.vn/rss/chinh-tri.rss",
-    function (err, resp, body) {
-      if (resp.statusCode === 200) {
-        const re = resp["body"];
-        const rep = parseString(re, function (err, result) {
-          res.send({ result });
-        });
-      }
-    }
-  );
-});
-
 app.get("/api/get/:slug", (req, res) => {
   request.get(
     "https://vietnamnet.vn/rss/" + req.param("slug") + ".rss",
@@ -42,6 +29,28 @@ app.get("/api/get/:slug", (req, res) => {
           var data = s.rss.channel;
           res.send(data[0]);
         });
+      }
+    }
+  );
+});
+
+app.get("/api/search/:keyword", (req, res) => {
+  var keyword = req.param("keyword");
+  var responseHtml = "";
+
+  request(
+    `https://vietnamnet.vn/tim-kiem?${keyword}`,
+    (error, response, html) => {
+      if (!error && response.statusCode == 200) {
+        const $ = cheerio.load(html);
+
+        $(".main-result").each((index, el) => {
+          const element = $(el).html();
+          responseHtml += element;
+        });
+        res.send(responseHtml);
+      } else {
+        res.send(error);
       }
     }
   );
