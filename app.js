@@ -56,6 +56,25 @@ app.get("/api/search/:keyword", (req, res) => {
   );
 });
 
+app.get("/article/:link", (req, res) => {
+  var link = req.param("link");
+  var responseHtml = "";
+
+  request(`https://vietnamnet.vn/${link}`, (error, response, html) => {
+    if (!error && response.statusCode == 200) {
+      const $ = cheerio.load(html);
+
+      $(".newsFeatureBox").each((index, el) => {
+        const element = $(el).html();
+        responseHtml += element;
+      });
+      res.set("Content-Type", "text/html");
+      res.send(responseHtml);
+    } else {
+      res.send(error);
+    }
+  });
+});
 app.listen(port, () => {
   console.log("listening on " + port);
 });
