@@ -63,11 +63,12 @@ app.get("/article/:link", (req, res) => {
   request(`https://vietnamnet.vn/${link}`, (error, response, html) => {
     if (!error && response.statusCode == 200) {
       const $ = cheerio.load(html);
-
+      const title = $(".breadcrumb-box__link").css("display", "none");
       $(".newsFeatureBox").each((index, el) => {
         const element = $(el).html();
         responseHtml += element;
       });
+      responseHtml += title;
       res.set("Content-Type", "text/html");
       res.send(responseHtml);
     } else {
