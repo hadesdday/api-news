@@ -68,6 +68,9 @@ app.get("/article/:link", (req, res) => {
         const element = $(el).html();
         responseHtml += element;
       });
+      if (responseHtml === "") {
+        responseHtml += $(".video-detail").html();
+      }
       responseHtml += title;
       res.set("Content-Type", "text/html");
       res.send(responseHtml);
