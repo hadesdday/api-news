@@ -21,7 +21,7 @@ app.use(function (req, res, next) {
 
 app.get("/api/get/:slug", (req, res) => {
   request.get(
-    "https://vietnamnet.vn/rss/" + req.param("slug") + ".rss",
+    "https://vietnamnet.vn/rss/" + req.params.slug + ".rss",
     function (err, resp, body) {
       if (resp.statusCode === 200) {
         parseString(resp["body"], function (err, result) {
