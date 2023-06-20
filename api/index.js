@@ -53,7 +53,7 @@ app.get("/api/search/:keyword", (req, res) => {
   );
 });
 
-app.get("/article/:link", (req, res) => {
+app.get("/api/article/:link", (req, res) => {
   var link = req.params.link;
   var responseHtml = "";
 
