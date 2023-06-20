@@ -1,9 +1,6 @@
 const express = require("express");
 const app = express();
 var request = require("request");
-const xml2js = require("xml2js");
-const fs = require("fs");
-const parser = new xml2js.Parser({ attrkey: "ATTR" });
 var parseString = require("xml2js").parseString;
 const cheerio = require("cheerio");
 
@@ -79,6 +76,19 @@ app.get("/article/:link", (req, res) => {
     }
   });
 });
+
+app.get("/api", (req, res) => {
+  const path = `/api/item/${v4()}`;
+  res.setHeader("Content-Type", "text/html");
+  res.setHeader("Cache-Control", "s-max-age=1, stale-while-revalidate");
+  res.end(`Hello! Go to item: <a href="${path}">${path}</a>`);
+});
+
+app.get("/api/item/:slug", (req, res) => {
+  const { slug } = req.params;
+  res.end(`Item: ${slug}`);
+});
+
 app.listen(port, () => {
   console.log("listening on " + port);
 });
