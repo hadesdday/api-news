@@ -54,24 +54,25 @@ app.get("/api/search/:keyword", (req, res) => {
 });
 
 app.get("/article/:link", (req, res) => {
-  var link = req.param("link");
+  var link = req.params.link;
   var responseHtml = "";
 
   request(`https://vietnamnet.vn/${link}`, (error, response, html) => {
     if (!error && response.statusCode == 200) {
       const $ = cheerio.load(html);
-      const title = $(".breadcrumb-box__link").css("display", "none");
-      $(".newsFeatureBox").each((index, el) => {
+      // const title = $(".breadcrumb-box__link").css("display", "none");
+      $("#maincontent").each((index, el) => {
         const element = $(el).html();
         responseHtml += element;
       });
       if (responseHtml === "") {
         responseHtml += $(".video-detail").html();
       }
-      responseHtml += title;
+      // responseHtml += title;
       res.set("Content-Type", "text/html");
       res.send(responseHtml);
     } else {
+      console.log("get article error");
       res.send(error);
     }
   });
